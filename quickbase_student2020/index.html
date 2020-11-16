@@ -1,0 +1,490 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+ <title> Covid19 Students Safe Campus Return< Powered By Quickbase </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content="landing page, website design" />
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="bootstrap.min.css">
+<script src="jquery.min.js"></script>
+<script src="bootstrap.min.js"></script>
+
+<script src="moment.js"></script>
+	<script src="livestamp.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+<style>
+    
+      #map {
+        height: 80%;
+      }
+    
+/*
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+*/
+   
+
+
+.res_center_css{
+position:absolute;top:50%;left:50%;margin-top: -50px;margin-left -50px;width:400px;height:400px;
+}
+
+.text{
+color:grey;
+font-size:14px;
+border:none;
+cursor:pointer;
+}
+
+
+
+.text:hover{
+color:black;
+}
+
+
+
+.add_btn{
+background-color: #0088cc;
+padding: 10px;
+color:white;
+font-size:14px;
+border-radius: 15%;
+border: none;
+cursor: pointer;
+text-align: center;
+
+}
+.add_btn:hover {
+background: black;
+color:white;
+}	
+
+
+.access{
+border-style: solid; border-width:4px; border-color:white;color:white;font-size:14px;
+}
+
+.access:hover{
+color:black;
+
+}
+
+
+
+
+.bgImage {
+    overflow-x: hidden;
+    position: fixed;
+    z-index: 9999;
+    width:100vw;
+    height: 100vh;
+    background: url(student.png) center no-repeat #0088cc;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -ms-background-size: cover;
+    -o-background-size: cover;
+}
+
+</style>
+
+
+
+
+
+ 
+</head>
+<body>
+
+
+
+
+
+<div class="padding-top:60px;"></div>
+
+<div class='bgImage'>
+
+<br><br>
+<center><p  style='font-size:30px;color:white;font-family:comic sans ms;padding:16px;border-radius:15%;'>
+
+ Covid19 Students Safe Campus Return (Sydney Students)</p></center><br>
+
+
+<div class='row'>
+<div class='col-sm-12' style='font-size:18px; background:#ddd;padding:16px;'>
+<b> Covid19 Students Safe Campus Return (Eg: Sydney Students)</b>   
+<span class="add_btn" data-toggle="modal" data-target="#myModal1" title="Add Covid19 Hotspots Locations">Add Covid19 Hotspots Locations</span><br>
+
+Powered By Quickbase<br>
+
+  <p class="text">
+Use Quickbase to Safely Return Students Back to Campus by detecting and avoiding Covid19 Hotspots Locations<br>
+
+
+
+ </p>
+</div>
+</div><br>
+
+
+<br><br>
+
+
+
+
+<div id="loader" class='res_center_css'></div>
+
+    <div id="map"></div>
+
+
+    <script>
+      var customLabel = {
+
+        c19: {
+          label: 'P'
+        }
+       
+
+      };
+//center: new google.maps.LatLng(-33.863276, 151.207977),
+ 
+        function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(-33.863276, 151.207977),
+          zoom: 12
+        });
+        var infoWindow = new google.maps.InfoWindow;
+
+$('#loader').fadeIn(400).html('<br><div style="color:black;background:#c1c1c1;padding:10px;"><i class="fa fa-spinner fa-spin" style="font-size:24px"></i>  &nbsp;Please Wait, Covid19 Hotspots Locations is being Loaded...</div>');
+
+          downloadUrl('map.php', function(data) {
+            var xml = data.responseXML;
+            var markers = xml.documentElement.getElementsByTagName('marker');
+            Array.prototype.forEach.call(markers, function(markerElem) {
+              var id = markerElem.getAttribute('id');
+              var name = markerElem.getAttribute('name');
+              var address = markerElem.getAttribute('address');
+var timing = markerElem.getAttribute('timing');
+var data_type = markerElem.getAttribute('data_type');
+var fullname = markerElem.getAttribute('fullname');
+              var type = markerElem.getAttribute('type');
+              var point = new google.maps.LatLng(
+                  parseFloat(markerElem.getAttribute('lat')),
+                  parseFloat(markerElem.getAttribute('lng')));
+
+$('#loader').hide();
+
+
+
+              var infowincontent = document.createElement('div');
+             var strong = document.createElement('strong');
+              strong.textContent = name
+              infowincontent.appendChild(strong);
+              infowincontent.appendChild(document.createElement('br'));
+
+              var text = document.createElement('text');
+              text.textContent = address
+              infowincontent.appendChild(text);
+              var icon = customLabel[type] || {};
+
+
+var photo ='covid19.png';
+//var private ='private.png';
+
+
+if(data_type=='Public'){
+                var map_data = "<div style='background:#c1c1c1; border-bottom: 2px dashed purple;'>" +
+"<div style='background:#ec5574;color:white;padding:10px;'>Covid19 Hotspots Geolocations Locations</div><br />" +
+
+"<img src=" + photo +" style='width:50px;max-width:50px;max-height:50px;height:50px;border-radius:50%'><br>" +
+"<span><b>Poster Name:</b> " + fullname + "</span><br />" +
+
+"<span><b>Covid19 Hotspots Location Address: </b>" + address + "</span><br />" +
+  "<span><b> <span class='fa fa-calendar'></span>Time:</b></span>" +
+"<span data-livestamp='" + timing + "'></span></span><br />"+
+
+                    "</div>";
+}
+
+var private ='Anonymous';
+
+if(data_type=='Private'){
+                var map_data = "<div style='background:#c1c1c1; border-bottom: 2px dashed purple;'>" +
+"<div style='background:#ec5574;color:white;padding:10px;'>Covid19 Hotspots Geolocations Locations</div><br />" +
+
+"<img src=" + photo +" style='width:50px;max-width:50px;max-height:50px;height:50px;border-radius:50%'><br>" +
+"<span><b>Poster Name:</b> " + private + "</span><br />" +
+
+"<span><b>Covid19 Hotspots Location Address: </b>" + address + "</span><br />" +
+  "<span><b> <span class='fa fa-calendar'></span>Time:</b></span>" +
+"<span data-livestamp='" + timing + "'></span></span><br />"+
+
+                    "</div>";
+}
+
+
+
+
+
+              var marker = new google.maps.Marker({
+                map: map,
+                position: point,
+                label: icon.label,
+ title : 'welcome'
+              });
+              marker.addListener('click', function() {
+                //infoWindow.setContent(infowincontent);
+
+//infoWindow.setContent('<b>'+name + "</b><br>" + address);
+
+infoWindow.setContent(map_data);
+                infoWindow.open(map, marker);
+              });
+            });
+          });
+        }
+
+
+
+      function downloadUrl(url, callback) {
+        var request = window.ActiveXObject ?
+            new ActiveXObject('Microsoft.XMLHTTP') :
+            new XMLHttpRequest;
+
+        request.onreadystatechange = function() {
+          if (request.readyState == 4) {
+            request.onreadystatechange = doNothing;
+            callback(request, request.status);
+          }
+        };
+
+        request.open('GET', url, true);
+        request.send(null);
+      }
+
+      function doNothing() {}
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChebOzRI0rKADR3YIQke65t33nBZrBw3A&callback=initMap">
+    </script>
+
+
+
+
+
+
+
+<script>
+
+$(document).ready(function(){
+$('#post_btn').click(function(){
+	
+var geo_address = $('#geo_address').val();
+var data_policy = $('#data_policy').val();
+var fname = $("#fname").val();
+var email = $("#email").val();
+
+
+if(data_policy==""){
+alert('Please Select Your Data Policy');
+return false;
+}
+
+
+
+if(fname==""){
+alert('Your Fullname cannot be Empty');
+return false;
+}
+
+
+if(email==""){
+alert('Email cannot be Empty');
+return false;
+}
+
+
+if(geo_address==""){
+alert('Please Enter Covid19 Hotspots Geolocation Address');
+}
+
+
+else{
+$('#loader_l2').fadeIn(400).html('<br><div style="color:black;background:#c1c1c1;padding:10px;"><i class="fa fa-spinner fa-spin" style="font-size:24px"></i>  &nbsp;Please Wait, Data is being sent...</div>');
+var datasend = "geo_address="+ geo_address+'&data_policy='+data_policy+'&fname='+fname+'&email='+email;
+		
+		$.ajax({
+			
+			type:'POST',
+			url:'posts.php',
+			data:datasend,
+                        crossDomain: true,
+			cache:false,
+			success:function(msg){
+
+
+
+
+
+
+
+
+if(msg == 1){
+alert('Posts Successfully Sent..');			
+$('#loader_l2').hide();
+$('#result_l2').html("<div style='color:white;background:green;padding:10px;'>Posts  Successfully Sent</div>");
+setTimeout(function(){ $('#result_l2').html(''); }, 5000);
+
+window.location='index.html';				
+			
+}
+else if(msg == 4){
+alert('Data could not be sent. Ensure there is network. and try again.');
+$('#loader_l2').hide();
+$('#result_l2').html("<div style='color:white;background:green;padding:10px;'>Data could not be sent. Ensure there is network. and try again.</div>");
+}
+
+
+else if(msg == 22){
+alert('Your Geolocation Address could not be converted to Google Longitude and Latitude. Please Try again..');
+$('#loader_l2').hide();
+$('#result_l2').html("<div style='color:white;background:red;padding:10px;'>Your Geolocation Address could not be converted to Google Longitude and Latitude. Please Try again..</div>");
+}
+
+
+
+
+else{
+
+alert('Error: Encountered Processing your Data');			
+$('#loader_l2').hide();
+$('#result_l2').html("<div style='color:white;background:red;padding:10px;'>Error: Encountered Processing your Data</div>");
+setTimeout(function(){ $('#result_l2').html(''); }, 5000);				
+	
+
+}
+
+
+
+
+			
+			}
+			
+		});
+		
+		}
+		
+	})
+					
+});
+
+</script>
+
+
+
+<!-- modal starts here -->
+
+
+<div class="container_modal">
+
+  <div class="modal fade " id="myModal1" role="dialog">
+    <div class="modal-dialog modal-lg modal-appear-center1 pull-right modaling_sizing">
+      <div class="modal-content">
+        <div class="modal-header" style="color:black;background:#c1c1c1">
+ <button type="button" class="pull-right btn btn-default" data-dismiss="modal">Close</button>
+      <h4 class="modal-title">Update Covid19 Hotspots Geolocations</h4>
+        </div>
+        <div class="modal-body">
+
+          <p>
+ Post Covid19 Hotspots Geolocations<br>
+
+<!-- start Form-->
+
+
+
+<br>
+<div class="col-sm-12 form-group">
+<span>Data Policy</span>
+<select class="form-control col-sm-12" id="data_policy" name="data_policy" required>
+<option value="">--Select Data Policy--</option>
+<option value="Private">Private (Your Email and Name will not be showed on Map)</option>
+<option value="Public">Public (Your Email and Name will be showed & Display on Map)</option>
+</select>
+</div>
+
+
+
+
+<div class="form-group">
+              <span>Your FullName</span>
+              <input type="text" class="col-sm-12 form-control" id="fname" name="fname" 
+placeholder="Enter Your FullName">
+            </div>
+
+
+
+
+<div class="form-group">
+              <span>Enter Email Address</span>
+              <input type="text" class="col-sm-12 form-control" id="email" name="email" 
+placeholder="Enter Your Email">
+            </div>
+
+
+<div class="form-group">
+              <span>Enter Enter Covid19 Hotspots Geolocation Address Eg: <b>60 Riley Street, Darlinghurst, NSW, Sydney</b></span>
+              <input type="text" class="col-sm-12 form-control" id="geo_address" name="geo_address" 
+placeholder="Enter Enter Covid19 Geolocation Address">
+            </div>
+
+
+
+<div class="col-sm-12 form-group">
+                        <div id="loader_l2"></div>
+                        <div id="result_l2"></div>
+</div>
+
+
+<button type="button" id="post_btn" class="add_btn"  /> Submit</button>
+</div>
+
+
+
+<!--end form-->
+
+
+
+
+</p>
+
+
+        </div>
+        <div class="modal-footer" style="color:black;background:#c1c1c1">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!--  modal ends here -->
+
+
+
+
+
+
+</div>
